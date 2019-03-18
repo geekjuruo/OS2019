@@ -391,9 +391,11 @@ for (i ; i < STACKFRAME_DEPTH; i++) { //循环跟踪栈的调用关系
   }
   ```
 
-### 扩展练习 
+### 最终实验结果
 
+由于本人没有实现扩展功能，所以最终make grade结果为30分（恢复了init.c中对lab1_switch_test()函数的调用）
 
+![9](./images/10.png)
 
 ### 本人实现与参考答案的区别
 
