@@ -221,17 +221,17 @@ default_free_pages(struct Page *base, size_t n) {
     //先合并前面的块
     if(hasBefore) {
     	before->property = before->property + base->property;
-	ClearPageProperty(base);
-	base = before; //此时base是合并后的块
+	    ClearPageProperty(base);
+	    base = before; //此时base是合并后的块
     }
     //继续合并后面的块
     if(hasBehind) {
     	base->property = base->property + behind->property;
-	ClearPageProperty(behind);
-	if(!hasBefore) {
-	   list_add_before(&(behind->page_link), &(base->page_link));
-	}
-	list_del(&(behind->page_link));
+	    ClearPageProperty(behind);
+        if(!hasBefore) {
+        list_add_before(&(behind->page_link), &(base->page_link));
+        }
+	    list_del(&(behind->page_link));
     }
     
     //list_add(&free_list, &(base->page_link));
