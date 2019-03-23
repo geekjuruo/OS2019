@@ -7405,7 +7405,7 @@ c010308a:	8b 40 08             	mov    0x8(%eax),%eax
 c010308d:	01 c2                	add    %eax,%edx
 c010308f:	8b 45 ec             	mov    -0x14(%ebp),%eax
 c0103092:	89 50 08             	mov    %edx,0x8(%eax)
-	ClearPageProperty(base);
+	    ClearPageProperty(base);
 c0103095:	8b 45 08             	mov    0x8(%ebp),%eax
 c0103098:	83 c0 04             	add    $0x4,%eax
 c010309b:	c7 45 88 01 00 00 00 	movl   $0x1,-0x78(%ebp)
@@ -7419,7 +7419,7 @@ clear_bit(int nr, volatile void *addr) {
 c01030a5:	8b 45 84             	mov    -0x7c(%ebp),%eax
 c01030a8:	8b 55 88             	mov    -0x78(%ebp),%edx
 c01030ab:	0f b3 10             	btr    %edx,(%eax)
-	base = before; //此时base是合并后的块
+	    base = before; //此时base是合并后的块
 c01030ae:	8b 45 ec             	mov    -0x14(%ebp),%eax
 c01030b1:	89 45 08             	mov    %eax,0x8(%ebp)
     }
@@ -7435,7 +7435,7 @@ c01030c7:	8b 40 08             	mov    0x8(%eax),%eax
 c01030ca:	01 c2                	add    %eax,%edx
 c01030cc:	8b 45 08             	mov    0x8(%ebp),%eax
 c01030cf:	89 50 08             	mov    %edx,0x8(%eax)
-	ClearPageProperty(behind);
+	    ClearPageProperty(behind);
 c01030d2:	8b 45 f0             	mov    -0x10(%ebp),%eax
 c01030d5:	83 c0 04             	add    $0x4,%eax
 c01030d8:	c7 45 80 01 00 00 00 	movl   $0x1,-0x80(%ebp)
@@ -7443,10 +7443,10 @@ c01030df:	89 85 7c ff ff ff    	mov    %eax,-0x84(%ebp)
 c01030e5:	8b 85 7c ff ff ff    	mov    -0x84(%ebp),%eax
 c01030eb:	8b 55 80             	mov    -0x80(%ebp),%edx
 c01030ee:	0f b3 10             	btr    %edx,(%eax)
-	if(!hasBefore) {
+        if(!hasBefore) {
 c01030f1:	83 7d e4 00          	cmpl   $0x0,-0x1c(%ebp)
 c01030f5:	75 7a                	jne    c0103171 <default_free_pages+0x3b8>
-	   list_add_before(&(behind->page_link), &(base->page_link));
+        list_add_before(&(behind->page_link), &(base->page_link));
 c01030f7:	8b 45 08             	mov    0x8(%ebp),%eax
 c01030fa:	83 c0 0c             	add    $0xc,%eax
 c01030fd:	8b 55 f0             	mov    -0x10(%ebp),%edx
@@ -7487,8 +7487,8 @@ c0103160:	89 50 04             	mov    %edx,0x4(%eax)
 c0103163:	8b 85 70 ff ff ff    	mov    -0x90(%ebp),%eax
 c0103169:	8b 95 6c ff ff ff    	mov    -0x94(%ebp),%edx
 c010316f:	89 10                	mov    %edx,(%eax)
-	}
-	list_del(&(behind->page_link));
+        }
+	    list_del(&(behind->page_link));
 c0103171:	8b 45 f0             	mov    -0x10(%ebp),%eax
 c0103174:	83 c0 0c             	add    $0xc,%eax
 c0103177:	89 85 64 ff ff ff    	mov    %eax,-0x9c(%ebp)

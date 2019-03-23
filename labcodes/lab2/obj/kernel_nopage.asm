@@ -7405,7 +7405,7 @@ __list_add(list_entry_t *elm, list_entry_t *prev, list_entry_t *next) {
   10308d:	01 c2                	add    %eax,%edx
   10308f:	8b 45 ec             	mov    -0x14(%ebp),%eax
   103092:	89 50 08             	mov    %edx,0x8(%eax)
-	ClearPageProperty(base);
+	    ClearPageProperty(base);
   103095:	8b 45 08             	mov    0x8(%ebp),%eax
   103098:	83 c0 04             	add    $0x4,%eax
   10309b:	c7 45 88 01 00 00 00 	movl   $0x1,-0x78(%ebp)
@@ -7419,7 +7419,7 @@ clear_bit(int nr, volatile void *addr) {
   1030a5:	8b 45 84             	mov    -0x7c(%ebp),%eax
   1030a8:	8b 55 88             	mov    -0x78(%ebp),%edx
   1030ab:	0f b3 10             	btr    %edx,(%eax)
-	base = before; //此时base是合并后的块
+	    base = before; //此时base是合并后的块
   1030ae:	8b 45 ec             	mov    -0x14(%ebp),%eax
   1030b1:	89 45 08             	mov    %eax,0x8(%ebp)
     }
@@ -7435,7 +7435,7 @@ clear_bit(int nr, volatile void *addr) {
   1030ca:	01 c2                	add    %eax,%edx
   1030cc:	8b 45 08             	mov    0x8(%ebp),%eax
   1030cf:	89 50 08             	mov    %edx,0x8(%eax)
-	ClearPageProperty(behind);
+	    ClearPageProperty(behind);
   1030d2:	8b 45 f0             	mov    -0x10(%ebp),%eax
   1030d5:	83 c0 04             	add    $0x4,%eax
   1030d8:	c7 45 80 01 00 00 00 	movl   $0x1,-0x80(%ebp)
@@ -7443,10 +7443,10 @@ clear_bit(int nr, volatile void *addr) {
   1030e5:	8b 85 7c ff ff ff    	mov    -0x84(%ebp),%eax
   1030eb:	8b 55 80             	mov    -0x80(%ebp),%edx
   1030ee:	0f b3 10             	btr    %edx,(%eax)
-	if(!hasBefore) {
+        if(!hasBefore) {
   1030f1:	83 7d e4 00          	cmpl   $0x0,-0x1c(%ebp)
   1030f5:	75 7a                	jne    103171 <default_free_pages+0x3b8>
-	   list_add_before(&(behind->page_link), &(base->page_link));
+        list_add_before(&(behind->page_link), &(base->page_link));
   1030f7:	8b 45 08             	mov    0x8(%ebp),%eax
   1030fa:	83 c0 0c             	add    $0xc,%eax
   1030fd:	8b 55 f0             	mov    -0x10(%ebp),%edx
@@ -7487,8 +7487,8 @@ __list_add(list_entry_t *elm, list_entry_t *prev, list_entry_t *next) {
   103163:	8b 85 70 ff ff ff    	mov    -0x90(%ebp),%eax
   103169:	8b 95 6c ff ff ff    	mov    -0x94(%ebp),%edx
   10316f:	89 10                	mov    %edx,(%eax)
-	}
-	list_del(&(behind->page_link));
+        }
+	    list_del(&(behind->page_link));
   103171:	8b 45 f0             	mov    -0x10(%ebp),%eax
   103174:	83 c0 0c             	add    $0xc,%eax
   103177:	89 85 64 ff ff ff    	mov    %eax,-0x9c(%ebp)
