@@ -2,23 +2,23 @@
 
 Special kernel symbols:
   entry  0xc0100036 (phys)
-  etext  0xc010a10a (phys)
-  edata  0xc0128000 (phys)
-  end    0xc012b178 (phys)
-Kernel executable memory footprint: 173KB
-ebp:0xc0124f38 eip:0xc01009f3 args:0x00010094 0x00000000 0xc0124f68 0xc01000df 
-    kern/debug/kdebug.c:309: print_stackframe+21
-ebp:0xc0124f48 eip:0xc0100ce6 args:0x00000000 0x00000000 0x00000000 0xc0124fb8 
+  etext  0xc010c0af (phys)
+  edata  0xc019e000 (phys)
+  end    0xc01a1178 (phys)
+Kernel executable memory footprint: 645KB
+ebp:0xc0129f38 eip:0xc0100aeb args:0x00010094 0x00000000 0xc0129f68 0xc01000df 
+    kern/debug/kdebug.c:351: print_stackframe+21
+ebp:0xc0129f48 eip:0xc0100dde args:0x00000000 0x00000000 0x00000000 0xc0129fb8 
     kern/debug/kmonitor.c:129: mon_backtrace+10
-ebp:0xc0124f68 eip:0xc01000df args:0x00000000 0xc0124f90 0xffff0000 0xc0124f94 
+ebp:0xc0129f68 eip:0xc01000df args:0x00000000 0xc0129f90 0xffff0000 0xc0129f94 
     kern/init/init.c:58: grade_backtrace2+33
-ebp:0xc0124f88 eip:0xc0100108 args:0x00000000 0xffff0000 0xc0124fb4 0x0000002a 
+ebp:0xc0129f88 eip:0xc0100108 args:0x00000000 0xffff0000 0xc0129fb4 0x0000002a 
     kern/init/init.c:63: grade_backtrace1+38
-ebp:0xc0124fa8 eip:0xc0100126 args:0x00000000 0xc0100036 0xffff0000 0x0000001d 
+ebp:0xc0129fa8 eip:0xc0100126 args:0x00000000 0xc0100036 0xffff0000 0x0000001d 
     kern/init/init.c:68: grade_backtrace0+23
-ebp:0xc0124fc8 eip:0xc010014b args:0xc010a13c 0xc010a120 0x00003178 0x00000000 
+ebp:0xc0129fc8 eip:0xc010014b args:0xc010c0dc 0xc010c0c0 0x00003178 0x00000000 
     kern/init/init.c:73: grade_backtrace+34
-ebp:0xc0124ff8 eip:0xc010008b args:0xc010a2d0 0xc010a2d8 0xc0100c6c 0xc010a2f7 
+ebp:0xc0129ff8 eip:0xc010008b args:0xc010c270 0xc010c278 0xc0100d64 0xc010c297 
     kern/init/init.c:33: kern_init+84
 memory management: default_pmm_manager
 e820map:
@@ -47,7 +47,7 @@ check_vmm() succeeded.
 ide 0:      10000(sectors), 'QEMU HARDDISK'.
 ide 1:     262144(sectors), 'QEMU HARDDISK'.
 SWAP: manager = fifo swap manager
-BEGIN check_swap: count 1, total 31984
+BEGIN check_swap: count 1, total 31866
 setup Page Table for vaddr 0X1000, so alloc a page
 setup Page Table vaddr 0~4MB OVER!
 set up init env for check_swap begin!
@@ -91,18 +91,22 @@ swap_in: load disk swap entry 2 with swap_page in vadr 0x1000
 count is 0, total is 5
 check_swap() succeeded!
 ++ setup timer interrupts
-this initproc, pid = 1, name = "init"
-To U: "Hello world!!".
-To U: "en.., Bye, Bye. :)"
-kernel panic at kern/process/proc.c:354:
-    process exit!!.
+kernel_execve: pid = 2, name = "hello".
+Hello world!!.
+I am process 2.
+hello pass.
+all user-mode processes have quit.
+init check memory pass.
+kernel panic at kern/process/proc.c:479:
+    initproc exit.
 
 stack trackback:
-ebp:0xc030df98 eip:0xc01009f3 args:0xc010a404 0xc030dfdc 0x00000162 0xc030dfcc 
-    kern/debug/kdebug.c:309: print_stackframe+21
-ebp:0xc030dfc8 eip:0xc0100d57 args:0xc010c00d 0x00000162 0xc010c021 0xc012b064 
+ebp:0xc0383f88 eip:0xc0100aeb args:0xc010c3a4 0xc0383fcc 0x000001df 0xc0383fb8 
+    kern/debug/kdebug.c:351: print_stackframe+21
+ebp:0xc0383fb8 eip:0xc0100e4f args:0xc010e0fc 0x000001df 0xc010e14b 0x00000000 
     kern/debug/panic.c:27: __panic+105
-ebp:0xc030dfe8 eip:0xc0109121 args:0x00000000 0xc010c0a0 0x00000000 0x00000010 
-    kern/process/proc.c:354: do_exit+33
+ebp:0xc0383fe8 eip:0xc010a1bc args:0x00000000 0x00000000 0x00000000 0x00000010 
+    kern/process/proc.c:479: do_exit+91
 Welcome to the kernel debug monitor!!
 Type 'help' for a list of commands.
+K> 
