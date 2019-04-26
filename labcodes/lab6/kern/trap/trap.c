@@ -245,10 +245,13 @@ trap_dispatch(struct trapframe *tf) {
          */
         ticks = ticks + 1;
 	
-        if(ticks % 100 == 0) {
-        //print_ticks(); 此处需要注释掉，参考piazza
-            current->need_resched = 1;	
-        }
+        // for lab6
+        sched_class_proc_tick(current);
+        
+        // if(ticks % 100 == 0) {
+        // //print_ticks(); 此处需要注释掉，参考piazza
+        //     current->need_resched = 1;	
+        // }
         break;
     case IRQ_OFFSET + IRQ_COM1:
         c = cons_getc();
