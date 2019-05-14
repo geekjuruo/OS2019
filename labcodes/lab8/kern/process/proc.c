@@ -638,83 +638,121 @@ load_icode(int fd, int argc, char **kargv) {
      * (7) setup trapframe for user environment
      * (8) if up steps failed, you should cleanup the env.
      */
-    assert(argc >= 0 && argc <= EXEC_MAX_ARG_NUM); // [ANSWER]
-
-    if (current->mm != NULL) {
-        panic("load_icode: current->mm must be empty.\n");
-    }
-
-    int ret = -E_NO_MEM;
-    struct mm_struct *mm;
+    int ret = 0;
+    assert(argc <= EXEC_MAX_ARG_NUM && argc >= 0);
+    
     //(1) create a new mm for current process
-    if ((mm = mm_create()) == NULL) {
+	struct mm_struct *mm = mm_create();
+    if (mm == NULL) {
+	ret = -E_NO_MEM;
         goto bad_mm;
     }
+
     //(2) create a new PDT, and mm->pgdir= kernel virtual addr of PDT
-    if (setup_pgdir(mm) != 0) {
+    int flagPgDir = setup_pgdir(mm);
+    if (flagPgDir != 0) {
+	ret = -E_NO_MEM;
         goto bad_pgdir_cleanup_mm;
     }
+
     //(3) copy TEXT/DATA section, build BSS parts in binary to memory space of process
-    struct Page *page;
-    //(3.1) get the file header of the bianry program (ELF format)
-    struct elfhdr __elf, *elf = &__elf; // [LAB8] elf header
-    if ((ret = load_icode_read(fd, elf, sizeof(struct elfhdr), 0)) != 0) {
+    //(3.1) read raw data content in file and resolve elfhdr
+	struct Page *page;
+    	struct elfhdr __elf;
+	struct elfhdr *elf = &__elf; 
+	int sizeElfHeader = sizeof(struct elfhdr);
+	int loadFlag = load_icode_read(fd, elf, sizeElfHeader, 0);
+    if (loadFlag != 0) {//load fail
+	ret = loadFlag;
         goto bad_elf_cleanup_pgdir;
-    } // [LAB8] 从磁盘读出elf header
-    //(3.2) This program is valid?
-    if (elf->e_magic != ELF_MAGIC) {
+    } 
+    bool isValid = elf->e_magic != ELF_MAGIC;
+    if (isValid) { // elf file is unvalid
         ret = -E_INVAL_ELF;
         goto bad_elf_cleanup_pgdir;
     }
-    //(3.3) get the entry of the program section headers of the bianry program (ELF format)
-    struct proghdr __ph, *ph = &__ph; // [LAB8] program header
-    uint32_t vm_flags, perm, phnum;
-    for (phnum = 0; phnum < elf->e_phnum; phnum ++) {
-    //(3.4) find every program section headers
-        off_t phoff = elf->e_phoff + sizeof(struct proghdr) * phnum;
-        if ((ret = load_icode_read(fd, ph, sizeof(struct proghdr), phoff)) != 0) { 
+    //(3.2)read raw data content in file and resolve proghdr based on info in elfhdr
+    struct proghdr __ph;
+    struct proghdr *ph = &__ph; 
+    uint32_t vm_flags = 0;
+    uint32_t perm = 0;
+    uint32_t phnum = 0;
+    uint32_t elfPhNum = elf->e_phnum;
+    for (phnum = 0; phnum < elfPhNum; phnum ++) {
+	int sizeProgHdr = sizeof(struct proghdr);
+        off_t phoff = elf->e_phoff + sizeProgHdr * phnum;
+	int flagLoad = load_icode_read(fd, ph, sizeProgHdr, phoff);
+        if (flagLoad != 0) { 
+	    ret = flagLoad;
             goto bad_cleanup_mmap; 
-        } // [LAB8] 从磁盘读出program header
-        if (ph->p_type != ELF_PT_LOAD) {
+        } 
+	bool flagType = ph->p_type != ELF_PT_LOAD;
+        if (flagType) {
             continue ;
         }
-        if (ph->p_filesz > ph->p_memsz) {
+	bool flagSizeBig = ph->p_filesz > ph->p_memsz;
+        if (flagSizeBig) {
             ret = -E_INVAL_ELF;
             goto bad_cleanup_mmap;
         }
-        if (ph->p_filesz == 0) {
+	bool flagSizeZero = ph->p_filesz == 0;
+        if (flagSizeZero) {
             continue ;
         }
-    //(3.5) call mm_map fun to setup the new vma ( ph->p_va, ph->p_memsz)
-        vm_flags = 0, perm = PTE_U;
-        if (ph->p_flags & ELF_PF_X) vm_flags |= VM_EXEC;
-        if (ph->p_flags & ELF_PF_W) vm_flags |= VM_WRITE;
-        if (ph->p_flags & ELF_PF_R) vm_flags |= VM_READ;
-        if (vm_flags & VM_WRITE) perm |= PTE_W;
-        if ((ret = mm_map(mm, ph->p_va, ph->p_memsz, vm_flags, NULL)) != 0) {
+    //(3.3)call mm_map to build vma related to TEXT/DATA
+        vm_flags = 0;
+	perm = PTE_U;
+	bool flagsX = ph->p_flags & ELF_PF_X;
+	
+        if (flagsX){
+	    vm_flags |= VM_EXEC;
+	}
+bool flagsW = ph->p_flags & ELF_PF_W;
+	
+        if (flagsW){
+	    vm_flags |= VM_WRITE;
+	}	
+bool flagsR = ph->p_flags & ELF_PF_R;
+	
+        if (flagsR ){
+ 	    vm_flags |= VM_READ;
+	}
+bool flagsVM = vm_flags & VM_WRITE;
+        if (flagsVM){ 
+	    perm |= PTE_W;
+	}
+	int flagMM = mm_map(mm, ph->p_va, ph->p_memsz, vm_flags, NULL);
+        if (flagMM != 0) {
+	    ret = flagMM;
             goto bad_cleanup_mmap;
         }
         off_t offset = ph->p_offset;
-        size_t off, size;
-        uintptr_t start = ph->p_va, end, la = ROUNDDOWN(start, PGSIZE);
-
-        ret = -E_NO_MEM;
+        size_t off;
+	size_t size;
+        uintptr_t start = ph->p_va;
+	uintptr_t la = ROUNDDOWN(start, PGSIZE);
+	uintptr_t end = ph->p_va + ph->p_filesz;
     //(3.6) alloc memory, and  copy the contents of every program section (from, from+end) to process's memory (la, la+end)
-        end = ph->p_va + ph->p_filesz;
         //(3.6.1) copy TEXT/DATA section of bianry program
         while (start < end) {
-            if ((page = pgdir_alloc_page(mm->pgdir, la, perm)) == NULL) {
+	    page = pgdir_alloc_page(mm->pgdir, la, perm);
+            if (page == NULL) {
                 ret = -E_NO_MEM;
                 goto bad_cleanup_mmap;
             }
-            off = start - la, size = PGSIZE - off, la += PGSIZE;
+            off = start - la;
+	    size = PGSIZE - off;
+	    la = la + PGSIZE;
             if (end < la) {
-                size -= la - end;
+                size = size - la + end;
             }
-            if ((ret = load_icode_read(fd, page2kva(page) + off, size, offset)) != 0) {
+	    int flagLoad = load_icode_read(fd, page2kva(page) + off, size, offset);
+            if (flagLoad != 0) {
+		ret = flagLoad;
                 goto bad_cleanup_mmap;
-            } // [LAB8] 从磁盘读出program content
-            start += size, offset += size;
+            } 
+            start = start + size;
+	    offset = offset + size;
         }
         //(3.6.2) build BSS section of binary program
         end = ph->p_va + ph->p_memsz;
@@ -724,28 +762,32 @@ load_icode(int fd, int argc, char **kargv) {
             if (start == end) {
                 continue ;
             }
-            off = start + PGSIZE - la, size = PGSIZE - off;
+            off = start + PGSIZE - la;
+	    size = PGSIZE - off;
             if (end < la) {
-                size -= la - end;
+                size = size - la + end;
             }
             memset(page2kva(page) + off, 0, size);
-            start += size;
+            start = start + size;
             assert((end < la && start == end) || (end >= la && start == la));
         }
         while (start < end) {
-            if ((page = pgdir_alloc_page(mm->pgdir, la, perm)) == NULL) {
+	    page = pgdir_alloc_page(mm->pgdir, la, perm);
+            if (page == NULL) {
                 ret = -E_NO_MEM;
                 goto bad_cleanup_mmap;
             }
-            off = start - la, size = PGSIZE - off, la += PGSIZE;
+            off = start - la;
+	    size = PGSIZE - off;
+	    la = la + PGSIZE;
             if (end < la) {
-                size -= la - end;
+                size = size - la + end;
             }
             memset(page2kva(page) + off, 0, size);
-            start += size;
+            start = start + size;
         }
     }
-    sysfile_close(fd); // [LAB8] 关闭file descriptor
+    sysfile_close(fd); // 关闭文件描述符
     //(4) build user stack memory
     vm_flags = VM_READ | VM_WRITE | VM_STACK;
     if ((ret = mm_map(mm, USTACKTOP - USTACKSIZE, USTACKSIZE, vm_flags, NULL)) != 0) {
@@ -761,10 +803,11 @@ load_icode(int fd, int argc, char **kargv) {
     current->cr3 = PADDR(mm->pgdir);
     lcr3(PADDR(mm->pgdir));
 
-    // [LAB8] 设置用户命令行参数，通过设置堆栈实现
-    uint32_t argv_size=0, i;
+    // 设置用户命令行参数，通过设置堆栈实现
+    uint32_t argv_size=0;
+    uint32_t i;
     for (i = 0; i < argc; i ++) {
-        argv_size += strnlen(kargv[i],EXEC_MAX_ARG_LEN + 1)+1;
+        argv_size = argv_size + strnlen(kargv[i],EXEC_MAX_ARG_LEN + 1)+1;
     }
 
     uintptr_t stacktop = USTACKTOP - (argv_size/sizeof(long)+1)*sizeof(long);

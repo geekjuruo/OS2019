@@ -2,7 +2,7 @@
 
 Special kernel symbols:
   entry  0xc0100036 (phys)
-  etext  0xc011591e (phys)
+  etext  0xc0115a41 (phys)
   edata  0xc0152000 (phys)
   end    0xc0156324 (phys)
 Kernel executable memory footprint: 345KB
@@ -16,9 +16,9 @@ ebp:0xc014ef88 eip:0xc0100112 args:0x00000000 0xffff0000 0xc014efb4 0x0000002a
     kern/init/init.c:66: grade_backtrace1+38
 ebp:0xc014efa8 eip:0xc0100130 args:0x00000000 0xc0100036 0xffff0000 0x0000001d 
     kern/init/init.c:71: grade_backtrace0+23
-ebp:0xc014efc8 eip:0xc0100155 args:0xc011593c 0xc0115920 0x00004324 0x00000000 
+ebp:0xc014efc8 eip:0xc0100155 args:0xc0115a7c 0xc0115a60 0x00004324 0x00000000 
     kern/init/init.c:76: grade_backtrace+34
-ebp:0xc014eff8 eip:0xc010008b args:0xc0115ad0 0xc0115ad8 0xc0100e57 0xc0115af7 
+ebp:0xc014eff8 eip:0xc010008b args:0xc0115c10 0xc0115c18 0xc0100e57 0xc0115c37 
     kern/init/init.c:34: kern_init+84
 memory management: default_pmm_manager
 e820map:
@@ -318,9 +318,9 @@ kernel panic at kern/process/proc.c:552:
     initproc exit.
 
 stack trackback:
-ebp:0xc0339f88 eip:0xc0100bde args:0xc0115c04 0xc0339fcc 0x00000228 0xc0339fb8 
+ebp:0xc0339f88 eip:0xc0100bde args:0xc0115d44 0xc0339fcc 0x00000228 0xc0339fb8 
     kern/debug/kdebug.c:351: print_stackframe+21
-ebp:0xc0339fb8 eip:0xc0100f42 args:0xc011822c 0x00000228 0xc011828e 0xc015631c 
+ebp:0xc0339fb8 eip:0xc0100f42 args:0xc011836c 0x00000228 0xc01183ce 0xc015631c 
     kern/debug/panic.c:27: __panic+105
 ebp:0xc0339fe8 eip:0xc010ce1c args:0x00000000 0x00000000 0x00000000 0x00000010 
     kern/process/proc.c:552: do_exit+91

@@ -2,7 +2,7 @@
 
 Special kernel symbols:
   entry  0xc0100036 (phys)
-  etext  0xc011591e (phys)
+  etext  0xc0115a41 (phys)
   edata  0xc0152000 (phys)
   end    0xc0156324 (phys)
 Kernel executable memory footprint: 345KB
@@ -16,9 +16,9 @@ ebp:0xc014ef88 eip:0xc0100112 args:0x00000000 0xffff0000 0xc014efb4 0x0000002a
     kern/init/init.c:66: grade_backtrace1+38
 ebp:0xc014efa8 eip:0xc0100130 args:0x00000000 0xc0100036 0xffff0000 0x0000001d 
     kern/init/init.c:71: grade_backtrace0+23
-ebp:0xc014efc8 eip:0xc0100155 args:0xc011593c 0xc0115920 0x00004324 0x00000000 
+ebp:0xc014efc8 eip:0xc0100155 args:0xc0115a7c 0xc0115a60 0x00004324 0x00000000 
     kern/init/init.c:76: grade_backtrace+34
-ebp:0xc014eff8 eip:0xc010008b args:0xc0115ad0 0xc0115ad8 0xc0100e57 0xc0115af7 
+ebp:0xc014eff8 eip:0xc010008b args:0xc0115c10 0xc0115c18 0xc0100e57 0xc0115c37 
     kern/init/init.c:34: kern_init+84
 memory management: default_pmm_manager
 e820map:
@@ -120,6 +120,7 @@ fork ok.
 pid 13 is running (1000 times)!.
 pid 13 done!.
 pid 15 is running (1100 times)!.
+pid 15 done!.
 Iter 1, No.0 philosopher_sema is eating
 Iter 1, No.2 philosopher_sema is eating
 phi_test_condvar: state_condvar[0] will eating
@@ -144,31 +145,32 @@ pid 14 done!.
 pid 19 is running (20600 times)!.
 pid 21 is running (2600 times)!.
 pid 23 is running (37100 times)!.
+pid 16 is running (1900 times)!.
 pid 25 is running (23500 times)!.
 pid 27 is running (23500 times)!.
-pid 16 is running (1900 times)!.
-pid 18 is running (11000 times)!.
-pid 20 is running (37100 times)!.
 pid 29 is running (33400 times)!.
+pid 18 is running (11000 times)!.
 pid 31 is running (2600 times)!.
 pid 32 is running (26600 times)!.
+pid 20 is running (37100 times)!.
 pid 22 is running (13100 times)!.
 pid 24 is running (4600 times)!.
 pid 26 is running (2600 times)!.
 pid 28 is running (4600 times)!.
 pid 30 is running (13100 times)!.
 pid 33 is running (13100 times)!.
-pid 16 done!.
-Iter 2, No.0 philosopher_sema is thinking
-Iter 1, No.4 philosopher_sema is eating
+pid 31 done!.
 Iter 2, No.2 philosopher_sema is thinking
-Iter 1, No.1 philosopher_sema is eating
+Iter 1, No.3 philosopher_sema is eating
 phi_test_condvar: state_condvar[4] will eating
 phi_test_condvar: signal self_cv[4] 
 cond_signal begin: cvp c0336a30, cvp->count 1, cvp->owner->next_count 0
 cond_wait end:  cvp c0336a30, cvp->count 0, cvp->owner->next_count 1
 Iter 1, No.4 philosopher_condvar is eating
-pid 15 done!.
+Iter 2, No.0 philosopher_sema is thinking
+Iter 1, No.1 philosopher_sema is eating
+pid 16 done!.
+pid 26 done!.
 pid 21 done!.
 cond_signal end: cvp c0336a30, cvp->count 0, cvp->owner->next_count 0
 Iter 2, No.0 philosopher_condvar is thinking
@@ -177,47 +179,49 @@ phi_test_condvar: signal self_cv[1]
 cond_signal begin: cvp c03369f4, cvp->count 1, cvp->owner->next_count 0
 cond_wait end:  cvp c03369f4, cvp->count 0, cvp->owner->next_count 1
 Iter 1, No.1 philosopher_condvar is eating
-Iter 2, No.4 philosopher_sema is thinking
-Iter 1, No.3 philosopher_sema is eating
 Iter 2, No.3 philosopher_sema is thinking
-pid 31 done!.
-pid 26 done!.
+Iter 1, No.4 philosopher_sema is eating
+Iter 2, No.4 philosopher_sema is thinking
 Iter 2, No.1 philosopher_sema is thinking
-pid 17 done!.
 Iter 2, No.0 philosopher_sema is eating
-pid 24 done!.
+Iter 3, No.0 philosopher_sema is thinking
+Iter 2, No.4 philosopher_sema is eating
 Iter 2, No.2 philosopher_sema is eating
 pid 28 done!.
 cond_signal end: cvp c03369f4, cvp->count 0, cvp->owner->next_count 0
 Iter 2, No.2 philosopher_condvar is thinking
+Iter 2, No.1 philosopher_condvar is thinking
 phi_test_condvar: state_condvar[3] will eating
 phi_test_condvar: signal self_cv[3] 
 cond_signal begin: cvp c0336a1c, cvp->count 1, cvp->owner->next_count 0
+pid 17 done!.
 cond_wait end:  cvp c0336a1c, cvp->count 0, cvp->owner->next_count 1
 Iter 1, No.3 philosopher_condvar is eating
 cond_signal end: cvp c0336a1c, cvp->count 0, cvp->owner->next_count 0
 Iter 2, No.4 philosopher_condvar is thinking
-Iter 2, No.1 philosopher_condvar is thinking
 phi_test_condvar: state_condvar[0] will eating
 phi_test_condvar: signal self_cv[0] 
 cond_signal begin: cvp c03369e0, cvp->count 0, cvp->owner->next_count 0
 cond_signal end: cvp c03369e0, cvp->count 0, cvp->owner->next_count 0
 Iter 2, No.0 philosopher_condvar is eating
-phi_take_forks_condvar: state_condvar[2] will wait
-cond_wait begin:  cvp c0336a08, cvp->count 0, cvp->owner->next_count 0
 phi_take_forks_condvar: state_condvar[1] will wait
 cond_wait begin:  cvp c03369f4, cvp->count 0, cvp->owner->next_count 0
+Iter 3, No.4 philosopher_sema is thinking
+pid 24 done!.
+phi_take_forks_condvar: state_condvar[2] will wait
+cond_wait begin:  cvp c0336a08, cvp->count 0, cvp->owner->next_count 0
+Iter 3, No.0 philosopher_sema is eating
 Iter 3, No.2 philosopher_sema is thinking
 Iter 2, No.3 philosopher_sema is eating
-Iter 3, No.0 philosopher_sema is thinking
-Iter 2, No.1 philosopher_sema is eating
 phi_test_condvar: state_condvar[2] will eating
 phi_test_condvar: signal self_cv[2] 
 cond_signal begin: cvp c0336a08, cvp->count 1, cvp->owner->next_count 0
 cond_wait end:  cvp c0336a08, cvp->count 0, cvp->owner->next_count 1
 Iter 2, No.2 philosopher_condvar is eating
-Iter 3, No.1 philosopher_sema is thinking
 Iter 3, No.3 philosopher_sema is thinking
+Iter 3, No.2 philosopher_sema is eating
+Iter 4, No.0 philosopher_sema is thinking
+Iter 3, No.4 philosopher_sema is eating
 cond_signal end: cvp c0336a08, cvp->count 0, cvp->owner->next_count 0
 Iter 2, No.3 philosopher_condvar is thinking
 phi_take_forks_condvar: state_condvar[4] will wait
@@ -225,12 +229,12 @@ cond_wait begin:  cvp c0336a30, cvp->count 0, cvp->owner->next_count 0
 phi_test_condvar: state_condvar[4] will eating
 phi_test_condvar: signal self_cv[4] 
 cond_signal begin: cvp c0336a30, cvp->count 1, cvp->owner->next_count 0
-Iter 3, No.2 philosopher_sema is eating
-Iter 3, No.0 philosopher_sema is eating
-Iter 4, No.0 philosopher_sema is thinking
-Iter 2, No.4 philosopher_sema is eating
+Iter 4, No.4 philosopher_sema is thinking
+Iter 4, No.0 philosopher_sema is eating
 Iter 4, No.2 philosopher_sema is thinking
-Iter 3, No.1 philosopher_sema is eating
+Iter 3, No.3 philosopher_sema is eating
+No.0 philosopher_sema quit
+Iter 2, No.1 philosopher_sema is eating
 cond_wait end:  cvp c0336a30, cvp->count 0, cvp->owner->next_count 1
 Iter 2, No.4 philosopher_condvar is eating
 cond_signal end: cvp c0336a30, cvp->count 0, cvp->owner->next_count 0
@@ -238,17 +242,20 @@ Iter 3, No.0 philosopher_condvar is thinking
 phi_test_condvar: state_condvar[1] will eating
 phi_test_condvar: signal self_cv[1] 
 cond_signal begin: cvp c03369f4, cvp->count 1, cvp->owner->next_count 0
+Iter 3, No.1 philosopher_sema is thinking
 cond_wait end:  cvp c03369f4, cvp->count 0, cvp->owner->next_count 1
 Iter 2, No.1 philosopher_condvar is eating
-Iter 3, No.4 philosopher_sema is thinking
-Iter 3, No.3 philosopher_sema is eating
-Iter 4, No.3 philosopher_sema is thinking
 cond_signal end: cvp c03369f4, cvp->count 0, cvp->owner->next_count 0
 Iter 3, No.2 philosopher_condvar is thinking
 phi_take_forks_condvar: state_condvar[3] will wait
 cond_wait begin:  cvp c0336a1c, cvp->count 0, cvp->owner->next_count 0
-Iter 4, No.1 philosopher_sema is thinking
+Iter 4, No.3 philosopher_sema is thinking
+Iter 4, No.4 philosopher_sema is eating
 Iter 4, No.2 philosopher_sema is eating
+pid 18 done!.
+No.2 philosopher_sema quit
+No.4 philosopher_sema quit
+Iter 4, No.3 philosopher_sema is eating
 phi_take_forks_condvar: state_condvar[0] will wait
 cond_wait begin:  cvp c03369e0, cvp->count 0, cvp->owner->next_count 0
 phi_test_condvar: state_condvar[3] will eating
@@ -256,12 +263,8 @@ phi_test_condvar: signal self_cv[3]
 cond_signal begin: cvp c0336a1c, cvp->count 1, cvp->owner->next_count 0
 cond_wait end:  cvp c0336a1c, cvp->count 0, cvp->owner->next_count 1
 Iter 2, No.3 philosopher_condvar is eating
-Iter 4, No.0 philosopher_sema is eating
-pid 18 done!.
-pid 30 done!.
+Iter 3, No.1 philosopher_sema is eating
 pid 22 done!.
-No.2 philosopher_sema quit
-Iter 4, No.3 philosopher_sema is eating
 cond_signal end: cvp c0336a1c, cvp->count 0, cvp->owner->next_count 0
 Iter 3, No.4 philosopher_condvar is thinking
 phi_test_condvar: state_condvar[0] will eating
@@ -269,8 +272,9 @@ phi_test_condvar: signal self_cv[0]
 cond_signal begin: cvp c03369e0, cvp->count 1, cvp->owner->next_count 0
 cond_wait end:  cvp c03369e0, cvp->count 0, cvp->owner->next_count 1
 Iter 3, No.0 philosopher_condvar is eating
-No.0 philosopher_sema quit
-Iter 4, No.1 philosopher_sema is eating
+pid 30 done!.
+pid 33 done!.
+No.3 philosopher_sema quit
 cond_signal end: cvp c03369e0, cvp->count 0, cvp->owner->next_count 0
 Iter 3, No.1 philosopher_condvar is thinking
 phi_take_forks_condvar: state_condvar[2] will wait
@@ -278,24 +282,19 @@ cond_wait begin:  cvp c0336a08, cvp->count 0, cvp->owner->next_count 0
 phi_test_condvar: state_condvar[2] will eating
 phi_test_condvar: signal self_cv[2] 
 cond_signal begin: cvp c0336a08, cvp->count 1, cvp->owner->next_count 0
+Iter 4, No.1 philosopher_sema is thinking
 cond_wait end:  cvp c0336a08, cvp->count 0, cvp->owner->next_count 1
 Iter 3, No.2 philosopher_condvar is eating
-No.1 philosopher_sema quit
-No.3 philosopher_sema quit
-pid 33 done!.
 cond_signal end: cvp c0336a08, cvp->count 0, cvp->owner->next_count 0
 Iter 3, No.3 philosopher_condvar is thinking
-Iter 3, No.4 philosopher_sema is eating
-phi_take_forks_condvar: state_condvar[4] will wait
-cond_wait begin:  cvp c0336a30, cvp->count 0, cvp->owner->next_count 0
+Iter 4, No.1 philosopher_sema is eating
+Iter 4, No.0 philosopher_condvar is thinking
 phi_test_condvar: state_condvar[4] will eating
 phi_test_condvar: signal self_cv[4] 
-cond_signal begin: cvp c0336a30, cvp->count 1, cvp->owner->next_count 0
-Iter 4, No.4 philosopher_sema is thinking
-cond_wait end:  cvp c0336a30, cvp->count 0, cvp->owner->next_count 1
-Iter 3, No.4 philosopher_condvar is eating
+cond_signal begin: cvp c0336a30, cvp->count 0, cvp->owner->next_count 0
 cond_signal end: cvp c0336a30, cvp->count 0, cvp->owner->next_count 0
-Iter 4, No.0 philosopher_condvar is thinking
+Iter 3, No.4 philosopher_condvar is eating
+No.1 philosopher_sema quit
 phi_take_forks_condvar: state_condvar[1] will wait
 cond_wait begin:  cvp c03369f4, cvp->count 0, cvp->owner->next_count 0
 phi_test_condvar: state_condvar[1] will eating
@@ -303,27 +302,23 @@ phi_test_condvar: signal self_cv[1]
 cond_signal begin: cvp c03369f4, cvp->count 1, cvp->owner->next_count 0
 cond_wait end:  cvp c03369f4, cvp->count 0, cvp->owner->next_count 1
 Iter 3, No.1 philosopher_condvar is eating
-Iter 4, No.4 philosopher_sema is eating
 cond_signal end: cvp c03369f4, cvp->count 0, cvp->owner->next_count 0
 Iter 4, No.2 philosopher_condvar is thinking
 phi_take_forks_condvar: state_condvar[3] will wait
 cond_wait begin:  cvp c0336a1c, cvp->count 0, cvp->owner->next_count 0
-No.4 philosopher_sema quit
-phi_take_forks_condvar: state_condvar[0] will wait
-cond_wait begin:  cvp c03369e0, cvp->count 0, cvp->owner->next_count 0
 phi_test_condvar: state_condvar[3] will eating
 phi_test_condvar: signal self_cv[3] 
 cond_signal begin: cvp c0336a1c, cvp->count 1, cvp->owner->next_count 0
 cond_wait end:  cvp c0336a1c, cvp->count 0, cvp->owner->next_count 1
 Iter 3, No.3 philosopher_condvar is eating
-pid 19 done!.
 cond_signal end: cvp c0336a1c, cvp->count 0, cvp->owner->next_count 0
 Iter 4, No.4 philosopher_condvar is thinking
+phi_take_forks_condvar: state_condvar[0] will wait
+cond_wait begin:  cvp c03369e0, cvp->count 0, cvp->owner->next_count 0
+pid 19 done!.
 phi_test_condvar: state_condvar[0] will eating
 phi_test_condvar: signal self_cv[0] 
 cond_signal begin: cvp c03369e0, cvp->count 1, cvp->owner->next_count 0
-pid 27 done!.
-pid 25 done!.
 cond_wait end:  cvp c03369e0, cvp->count 0, cvp->owner->next_count 1
 Iter 4, No.0 philosopher_condvar is eating
 cond_signal end: cvp c03369e0, cvp->count 0, cvp->owner->next_count 0
@@ -337,18 +332,17 @@ cond_wait end:  cvp c0336a08, cvp->count 0, cvp->owner->next_count 1
 Iter 4, No.2 philosopher_condvar is eating
 cond_signal end: cvp c0336a08, cvp->count 0, cvp->owner->next_count 0
 Iter 4, No.3 philosopher_condvar is thinking
-phi_take_forks_condvar: state_condvar[4] will wait
-cond_wait begin:  cvp c0336a30, cvp->count 0, cvp->owner->next_count 0
+No.0 philosopher_condvar quit
 phi_test_condvar: state_condvar[4] will eating
 phi_test_condvar: signal self_cv[4] 
-cond_signal begin: cvp c0336a30, cvp->count 1, cvp->owner->next_count 0
-pid 32 done!.
-cond_wait end:  cvp c0336a30, cvp->count 0, cvp->owner->next_count 1
-Iter 4, No.4 philosopher_condvar is eating
+cond_signal begin: cvp c0336a30, cvp->count 0, cvp->owner->next_count 0
 cond_signal end: cvp c0336a30, cvp->count 0, cvp->owner->next_count 0
-No.0 philosopher_condvar quit
+Iter 4, No.4 philosopher_condvar is eating
+pid 25 done!.
+pid 27 done!.
 phi_take_forks_condvar: state_condvar[1] will wait
 cond_wait begin:  cvp c03369f4, cvp->count 0, cvp->owner->next_count 0
+No.4 philosopher_condvar quit
 phi_test_condvar: state_condvar[1] will eating
 phi_test_condvar: signal self_cv[1] 
 cond_signal begin: cvp c03369f4, cvp->count 1, cvp->owner->next_count 0
@@ -356,17 +350,14 @@ cond_wait end:  cvp c03369f4, cvp->count 0, cvp->owner->next_count 1
 Iter 4, No.1 philosopher_condvar is eating
 cond_signal end: cvp c03369f4, cvp->count 0, cvp->owner->next_count 0
 No.2 philosopher_condvar quit
-phi_take_forks_condvar: state_condvar[3] will wait
-cond_wait begin:  cvp c0336a1c, cvp->count 0, cvp->owner->next_count 0
 phi_test_condvar: state_condvar[3] will eating
 phi_test_condvar: signal self_cv[3] 
-cond_signal begin: cvp c0336a1c, cvp->count 1, cvp->owner->next_count 0
-cond_wait end:  cvp c0336a1c, cvp->count 0, cvp->owner->next_count 1
-Iter 4, No.3 philosopher_condvar is eating
+cond_signal begin: cvp c0336a1c, cvp->count 0, cvp->owner->next_count 0
 cond_signal end: cvp c0336a1c, cvp->count 0, cvp->owner->next_count 0
-No.4 philosopher_condvar quit
-No.1 philosopher_condvar quit
+Iter 4, No.3 philosopher_condvar is eating
 No.3 philosopher_condvar quit
+No.1 philosopher_condvar quit
+pid 32 done!.
 pid 29 done!.
 pid 23 done!.
 pid 20 done!.
@@ -378,9 +369,9 @@ kernel panic at kern/process/proc.c:552:
     initproc exit.
 
 stack trackback:
-ebp:0xc0339f88 eip:0xc0100bde args:0xc0115c04 0xc0339fcc 0x00000228 0xc0339fb8 
+ebp:0xc0339f88 eip:0xc0100bde args:0xc0115d44 0xc0339fcc 0x00000228 0xc0339fb8 
     kern/debug/kdebug.c:351: print_stackframe+21
-ebp:0xc0339fb8 eip:0xc0100f42 args:0xc011822c 0x00000228 0xc011828e 0xc015631c 
+ebp:0xc0339fb8 eip:0xc0100f42 args:0xc011836c 0x00000228 0xc01183ce 0xc015631c 
     kern/debug/panic.c:27: __panic+105
 ebp:0xc0339fe8 eip:0xc010ce1c args:0x00000000 0x00000000 0x00000000 0x00000010 
     kern/process/proc.c:552: do_exit+91
