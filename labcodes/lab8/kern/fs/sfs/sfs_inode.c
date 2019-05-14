@@ -599,64 +599,61 @@ sfs_io_nolock(struct sfs_fs *sfs, struct sfs_inode *sin, void *buf, off_t offset
      * (3) If end position isn't aligned with the last block, Rd/Wr some content from begin to the (endpos % SFS_BLKSIZE) of the last block
 	 *       NOTICE: useful function: sfs_bmap_load_nolock, sfs_buf_op	
 	*/
-    // (1) If offset isn't aligned with the first block, 
-
     
-    
-	
+	// (1) If offset isn't aligned with the first block, 
 	blkoff = offset - blkno * SFS_BLKSIZE;//计算头部偏移
 	if (blkoff != 0) {		      //若偏移不为0
         size = (nblks != 0) ? (SFS_BLKSIZE - blkoff) : (endpos - offset);				     //计算size	
-	int flagLoad = sfs_bmap_load_nolock(sfs, sin, blkno, &ino);
+	    int flagLoad = sfs_bmap_load_nolock(sfs, sin, blkno, &ino);
         if (flagLoad != 0) {
-	ret = flagLoad;
-	goto out;
-	}
-	int flagBuf = sfs_buf_op(sfs, buf, size, ino, blkoff);
+            ret = flagLoad;
+            goto out;
+        }
+	    int flagBuf = sfs_buf_op(sfs, buf, size, ino, blkoff);
         if (flagBuf != 0){
- 	ret = flagBuf;
-	goto out;
-	}
+            ret = flagBuf;
+            goto out;
+        }
         alen = alen + size;
         buf = buf + size;
         if(nblks != 0){
-		blkno++;
-		nblks--;
-	} else {
-		goto out;
-	}
+            blkno = blkno + 1;
+            nblks = nblks - 1;
+        } else {
+            goto out;
+        }
    }
 
     // (2) Rd/Wr aligned blocks 
     for(nblks; nblks != 0; nblks--) { //对所有整数据块进行读写
         int flagLoad = sfs_bmap_load_nolock(sfs, sin, blkno, &ino);
         if (flagLoad != 0) {
-	ret = flagLoad;
-	goto out;
-	}
-	int flagBlock = sfs_block_op(sfs, buf,  ino, 1);
+            ret = flagLoad;
+            goto out;
+	    }
+	    int flagBlock = sfs_block_op(sfs, buf,  ino, 1);
         if (flagBlock != 0){
- 	ret = flagBlock;
-	goto out;
-	}
-        alen = alen +  SFS_BLKSIZE;
+            ret = flagBlock;
+            goto out;
+	    }
+        alen = alen +  SFS_BLKSIZE; //每次读取的大小为一个数据块大小
         buf = buf + SFS_BLKSIZE;
-        blkno++;
+        blkno = blkno + 1;
     }
 
     // (3) If end position isn't aligned with the last block,
-	size = endpos - (endpos / SFS_BLKSIZE) * SFS_BLKSIZE;
-    if (size != 0) {
+	size = endpos - (endpos / SFS_BLKSIZE) * SFS_BLKSIZE; // 计算剩余需要读取的size
+    if (size != 0) {                                    //若仍然存在还没有读取的部分，一次性读入
         int flagLoad = sfs_bmap_load_nolock(sfs, sin, blkno, &ino);
         if (flagLoad != 0) {
-	ret = flagLoad;
-	goto out;
-	}
-	int flagBuf = sfs_buf_op(sfs, buf, size, ino, 0);
+	        ret = flagLoad;
+	        goto out;
+	    }
+	    int flagBuf = sfs_buf_op(sfs, buf, size, ino, 0);
         if (flagBuf != 0){
- 	ret = flagBuf;
-	goto out;
-	}
+            ret = flagBuf;
+            goto out;
+	    }
         alen = alen + size;
         buf = buf + size;
     }
