@@ -638,7 +638,7 @@ load_icode(int fd, int argc, char **kargv) {
      * (7) setup trapframe for user environment
      * (8) if up steps failed, you should cleanup the env.
      */
-    assert(argc <= EXEC_MAX_ARG_NUM && argc >= 0)
+    assert(argc <= EXEC_MAX_ARG_NUM && argc >= 0);
 
     if (current->mm != NULL) {
         panic("load_icode: current->mm must be empty.\n");
@@ -660,10 +660,10 @@ load_icode(int fd, int argc, char **kargv) {
     //(3) copy TEXT/DATA section, build BSS parts in binary to memory space of process
     struct Page *page;
     //(3.1) get the file header of the bianry program (ELF format)
-    struct elfhdr *_elf;
+    struct elfhdr _elf;
     struct elfhdr *elf = &_elf;
     //(3.2) get the entry of the program section headers of the bianry program (ELF format)
-    struct proghdr *_ph;
+    struct proghdr _ph;
     struct proghdr *ph = &_ph;
 
     //for LAB8
@@ -686,11 +686,11 @@ load_icode(int fd, int argc, char **kargv) {
     //(3.4) find every program section headers
         
         // for Lab8
-        off_t phOffset = elf->e_phoff + sizeof(struct proghdr) * phnum;
+        off_t phOffset = elf->e_phoff + sizeof(struct proghdr) * phIndex;
         int flag_ph = load_icode_read(fd, ph, sizeof(struct proghdr), phOffset);
         if(flag_ph != 0) {
             ret = flag_ph;
-            goto bag_cleanup_map;
+            goto bad_cleanup_mmap;
         }
 
         if (ph->p_type != ELF_PT_LOAD) {
@@ -712,7 +712,7 @@ load_icode(int fd, int argc, char **kargv) {
         if ((ret = mm_map(mm, ph->p_va, ph->p_memsz, vm_flags, NULL)) != 0) {
             goto bad_cleanup_mmap;
         }
-        unsigned char *from = binary + ph->p_offset;
+        //unsigned char *from = binary + ph->p_offset;
         size_t off, size;
         uintptr_t start = ph->p_va, end, la = ROUNDDOWN(start, PGSIZE);
         
@@ -726,6 +726,7 @@ load_icode(int fd, int argc, char **kargv) {
      //(3.6.1) copy TEXT/DATA section of bianry program
         while (start < end) {
             if ((page = pgdir_alloc_page(mm->pgdir, la, perm)) == NULL) {
+		ret = -E_NO_MEM;
                 goto bad_cleanup_mmap;
             }
             off = start - la, size = PGSIZE - off, la += PGSIZE;
@@ -737,9 +738,9 @@ load_icode(int fd, int argc, char **kargv) {
             int flag_page = load_icode_read(fd, page2kva(page) + off, size, ph_Offset);
             if(flag_page != 0) {
                 ret = flag_page;
-                goto bad_cleanup_map;
+                goto bad_cleanup_mmap;
             }
-            start += size, from += size;
+            start += size, ph_Offset += size;
         }
 
       //(3.6.2) build BSS section of binary program
@@ -759,6 +760,7 @@ load_icode(int fd, int argc, char **kargv) {
         }
         while (start < end) {
             if ((page = pgdir_alloc_page(mm->pgdir, la, perm)) == NULL) {
+		ret = -E_NO_MEM;
                 goto bad_cleanup_mmap;
             }
             off = start - la, size = PGSIZE - off, la += PGSIZE;
@@ -802,9 +804,9 @@ load_icode(int fd, int argc, char **kargv) {
     stackTop = USTACKTOP - (argvLen/sizeof(long)+1)*sizeof(long);
     userArgv = (char**)(stackTop - argc * sizeof(char*));
     argvLen = 0;
-    i = 0
+    i = 0;
     for (i; i < argc; i++) {
-        userArgv[i] = strcpy((char *)(stacktop + userArgv ), kargv[i]);
+        userArgv[i] = strcpy((char *)(stackTop + argvLen ), kargv[i]);
         uint32_t theArgLen = strnlen(kargv[i],EXEC_MAX_ARG_LEN + 1)+1;
         argvLen = argvLen + theArgLen;
     }
